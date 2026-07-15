@@ -32,16 +32,21 @@
 
   body{
     min-height:100vh;
+    position:relative;
+  }
+
+  #content{
+    position:fixed;
+    inset:0;
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    position:relative;
     padding: 48px 24px 32px;
     filter: blur(22px);
   }
 
-  body.verified{
+  #content.verified{
     animation: introBlur 1s cubic-bezier(.22,.61,.36,1) forwards;
   }
 
@@ -334,7 +339,7 @@
 
   @media (prefers-reduced-motion: reduce){
     *{ animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
-    body{ filter:none; }
+    #content{ filter:none; }
     #gate{ transition:none; }
   }
 
@@ -349,11 +354,12 @@
   <div id="gate">
     <div class="gate-card">
       <div class="gate-title">请完成验证以继续</div>
-      <div class="gate-subtitle">确认您不是机器人后即可访问网站</div>
+      <div class="gate-subtitle">确认您不是人机后即可访问网站🤣</div>
       <div class="cf-turnstile" data-sitekey="0x4AAAAAAD2Ncz8AOJMsCFrP" data-callback="onGatePassed"></div>
     </div>
   </div>
 
+  <div id="content">
   <canvas id="dots"></canvas>
   <div class="ambient"></div>
 
@@ -410,6 +416,7 @@
       搭建/维护 <b>贪睡</b><span class="dot"></span>管理员 <b>梁妹</b>
     </footer>
   </main>
+  </div>
 
   <script>
     document.querySelectorAll('.copy-btn').forEach(btn => {
@@ -573,7 +580,7 @@
 
     function onGatePassed(){
       document.getElementById('gate').classList.add('gate-hidden');
-      document.body.classList.add('verified');
+      document.getElementById('content').classList.add('verified');
       if (!prefersReduced){
         setTimeout(startWave, 1000);
       }
