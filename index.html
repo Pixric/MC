@@ -1,10 +1,10 @@
-//饿死了🫠🫠🫠
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Minecraft · Linux</title>
+<title>Minecraft Linux</title>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <style>
   :root{
     --bg: #f5f5f7;
@@ -39,12 +39,62 @@
     position:relative;
     padding: 48px 24px 32px;
     filter: blur(22px);
+  }
+
+  body.verified{
     animation: introBlur 1s cubic-bezier(.22,.61,.36,1) forwards;
   }
 
   @keyframes introBlur{
     from{ filter: blur(22px); }
     to{ filter: blur(0px); }
+  }
+
+  #gate{
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: rgba(245,245,247,0.92);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    transition: opacity 0.5s ease;
+  }
+
+  #gate.gate-hidden{
+    opacity:0;
+    pointer-events:none;
+  }
+
+  .gate-card{
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 32px 28px;
+    box-shadow: 0 20px 60px -24px rgba(0,0,0,0.18), 0 2px 10px rgba(0,0,0,0.03);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:16px;
+    max-width: 320px;
+    width:90%;
+    text-align:center;
+  }
+
+  .gate-title{
+    font-size:17px;
+    font-weight:600;
+    color:var(--text);
+    letter-spacing:-0.01em;
+  }
+
+  .gate-subtitle{
+    font-size:13px;
+    color:var(--text-dim);
+    line-height:1.6;
+    margin-top:-8px;
   }
 
   .ambient{
@@ -285,6 +335,7 @@
   @media (prefers-reduced-motion: reduce){
     *{ animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
     body{ filter:none; }
+    #gate{ transition:none; }
   }
 
   @media (max-width: 380px){
@@ -294,6 +345,14 @@
 </style>
 </head>
 <body>
+
+  <div id="gate">
+    <div class="gate-card">
+      <div class="gate-title">请完成验证以继续</div>
+      <div class="gate-subtitle">确认您不是机器人后即可访问网站</div>
+      <div class="cf-turnstile" data-sitekey="0x4AAAAAAD2Ncz8AOJMsCFrP" data-callback="onGatePassed"></div>
+    </div>
+  </div>
 
   <canvas id="dots"></canvas>
   <div class="ambient"></div>
@@ -348,7 +407,7 @@
     </div>
 
     <footer>
-      搭建维护 <b>贪睡</b><span class="dot"></span>管理员 <b>梁妹</b>
+      搭建/维护 <b>贪睡</b><span class="dot"></span>管理员 <b>梁妹</b>
     </footer>
   </main>
 
@@ -510,14 +569,18 @@
 
     resizeDots();
 
-    const introReduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!introReduceMotion){
-      setTimeout(startWave, 1000);
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function onGatePassed(){
+      document.getElementById('gate').classList.add('gate-hidden');
+      document.body.classList.add('verified');
+      if (!prefersReduced){
+        setTimeout(startWave, 1000);
+      }
     }
 
     const cubeStage = document.querySelector('.cube-stage');
     const cube = document.getElementById('cube');
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     let targetTiltX = -22, targetTiltY = 0;
     let curRX = -22, curRY = -35;
@@ -545,7 +608,7 @@
     function loop(){
       drawDots();
 
-      if (!reduceMotion){
+      if (!prefersReduced){
         autoAngle += 0.1;
       }
       const ry = autoAngle - 35 + targetTiltY;
@@ -562,7 +625,7 @@
       cube.style.transform = `rotateX(${curRX.toFixed(2)}deg) rotateY(${curRY.toFixed(2)}deg)`;
       cubeStage.style.setProperty('--hue', hue.toFixed(1));
 
-      if (!reduceMotion) requestAnimationFrame(loop);
+      if (!prefersReduced) requestAnimationFrame(loop);
     }
     loop();
   </script>
