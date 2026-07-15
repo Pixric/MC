@@ -78,7 +78,7 @@
     max-width: 480px;
   }
 
-  /* ---------- cube signature ---------- */
+  
   .cube-stage{
     width: 170px;
     height: 170px;
@@ -254,7 +254,7 @@
   .copy-btn.done .icon .copy{ opacity:0; transform: scale(0.6); }
   .copy-btn.done .icon .check{ opacity:1; transform: scale(1); }
 
-  /* ---------- footer ---------- */
+  /*
   footer{
     margin-top: 40px;
     font-size: 13px;
@@ -277,7 +277,7 @@
     vertical-align: middle;
   }
 
-  /* ---------- keyframes ---------- */
+  /
   @keyframes rise{
     from{ opacity:0; transform: translateY(14px); }
     to{ opacity:1; transform: translateY(0); }
@@ -358,7 +358,7 @@
   </main>
 
   <script>
-    // ---- 复制按钮 ----
+    // 复制功能 呃呃呃呃呃好饿😋
     document.querySelectorAll('.copy-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
         const text = btn.getAttribute('data-copy');
@@ -380,7 +380,7 @@
       });
     });
 
-    // ---- 背景点阵：靠近鼠标的点变大，离开变小 ----
+    // 小灰点，大米A大米
     const dotsCanvas = document.getElementById('dots');
     const dctx = dotsCanvas.getContext('2d');
     const DPR = Math.min(window.devicePixelRatio || 1, 2);
@@ -394,7 +394,7 @@
     let dotMouseX = -9999, dotMouseY = -9999;
     let dotPointerActive = false;
 
-    // 入场海浪：模糊结束后，彩色波浪从下往上扫过点阵，1 秒内完成
+    //
     const WAVE_DURATION = 1.0;
     const WAVE_SIGMA = 0.14;
     let waveActive = false;
@@ -469,7 +469,7 @@
       for (let k = 0; k < dots.length; k++){
         const d = dots[k];
 
-        // 鼠标跟随的影响
+        // 鼠标
         let hoverT = 0;
         if (dotPointerActive){
           const dx = d.x - dotMouseX;
@@ -481,7 +481,7 @@
           }
         }
 
-        // 波浪从下往上经过该点时的影响（高斯脉冲）
+        // 高斯模糊
         let waveInfluence = 0;
         if (waveActive){
           const ratio = Math.min(1, Math.max(0, d.y / h));
@@ -503,7 +503,7 @@
           dctx.fill();
         }
 
-        // 波浪经过时叠加细腻的彩虹柔光
+        // 🌈
         if (waveInfluence > 0.025){
           const hue = ((d.x / w) * 250 + (d.y / h) * 70 + waveElapsed * 130) % 360;
           const glowR = d.r * 2.4 + 1.5;
@@ -521,7 +521,7 @@
 
     resizeDots();
 
-    // ---- 方块跟随鼠标方向旋转 + 变色 ----
+    // 跟随
     const introReduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!introReduceMotion){
       setTimeout(startWave, 1000);
